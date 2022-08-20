@@ -302,18 +302,21 @@ fn ident_to_kind(ident: &Ident, arguments: &PathArguments) -> TypeKind {
                                 TypeKind::Composite(Composite::Vec, vec![])
                             }
                         },
-                        "Option" => match resolve_rust_ty(
-                            ty,
-                            RustTypeContext::OptionItem,
-                        ) {
-                            Ok(inner) => TypeKind::Composite(
-                                Composite::Option,
-                                vec![inner],
-                            ),
-                            Err(_) => {
-                                TypeKind::Composite(Composite::Option, vec![])
+                        "COption" | "Option" => {
+                            match resolve_rust_ty(
+                                ty,
+                                RustTypeContext::OptionItem,
+                            ) {
+                                Ok(inner) => TypeKind::Composite(
+                                    Composite::Option,
+                                    vec![inner],
+                                ),
+                                Err(_) => TypeKind::Composite(
+                                    Composite::Option,
+                                    vec![],
+                                ),
                             }
-                        },
+                        }
                         _ => match resolve_rust_ty(
                             ty,
                             RustTypeContext::CustomItem,
